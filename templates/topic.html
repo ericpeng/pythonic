@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+	
+{% block main %}
+<div id="topic-wrap" class="box">
+	{% for item in topics %}
+	<div class="topic-item">
+	    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+	        <tbody>
+	       	<tr>
+	            <td width="48" valign="top" align="center"><a href="/people/{{item.author.id}}/"><img src="/media/avatar/{{ item.author.get_profile.avatar }}" class="avatar" border="0" alt="{{ item.author.get_profile.name}}"></a></td>
+	            <td width="10"></td>
+	            
+	            <td width="auto" valign="middle"><span class="item_title"><a href="/topic/{{item.id}}/">{{ item.title }}</a></span>
+	            <div class="sep5"></div>
+	            <span class="small muted"><a class="node" href="/node/{{ item.node.id }}/">{{ item.node }}</a> &nbsp;•&nbsp; <strong><a href="/people/{{item.author.id}}/">{{ item.author.get_profile.name}}</a></strong> &nbsp;•&nbsp; {{ item.updated_on|time_since }} &nbsp;•&nbsp; 最后回复来自 <strong><a href="/member/pango">{{ item.author.get_profile.name}}</a></strong></span>
+	            </td>
+	            <td width="50" align="right" valign="middle">
+	                <a href="/topic/{{item.id}}/" class="badge">{{ item.num_replies }}</a>
+	            </td>
+	        </tr>
+	    	</tbody>
+	    </table>
+	</div>
+	{% endfor %}
+</div>
+<div id="node-wrap" class="box">
+    <div class="node-title"><span>节点导航</span><span class="pull-right"><a href="/node/explore/">全部节点</a></span></div>
+    <ul>
+        <li>
+            <label class="bold">Python</label>
+            <span class="nodes">
+            	{% for item in nodes %}
+                    <a href="/node/{{item.id}}/" title="{{ item.name}}">{{ item.name}}</a>
+                {% endfor %}
+                    <a href="" title="重构">重构</a>
+                    <a href="" title="测试">测试</a>
+                    <a href="" title="部署">部署</a>
+                    <a href="" title="开源项目">开源项目</a>
+            </span>
+        </li>
+        <li>
+            <label class="bold">分享</label>
+            <span class="nodes">
+                    <a href="" title="工具控">工具控</a>
+                    <a href="" title="分享">分享</a>
+                    <a href="" title="瞎扯淡">瞎扯淡</a>
+                    <a href="" title="其他">其他</a>
+                    <a href="" title="产品控">产品控</a>
+                    <a href="" title="书籍">书籍</a>
+                    <a href="" title="Mac">Mac</a>
+                    <a href="" title="插画">插画</a>
+                    <a href="" title="创业">创业</a>
+                    <a href="" title="移民">移民</a>
+                    <a href="" title="招聘">招聘</a>
+            </span>
+        </li>
+        <li>
+            <label class="bold">Web 开发</label>
+            <span class="nodes">
+                    <a href="" title="MongoDB">MongoDB</a>
+                    <a href="" title="Redis">Redis</a>
+                    <a href="" title="Git">Git</a>
+                    <a href="" title="Database">Database</a>
+                    <a href="" title="Linux">Linux</a>
+                    <a href="" title="Nginx">Nginx</a>
+                    <a href="" title="云服务">云服务</a>
+                    <a href="" title="搜索分词">搜索分词</a>
+                    <a href="" title="算法">算法</a>
+                    <a href="" title="CSS">CSS</a>
+                    <a href="" title="数学">数学</a>
+                    <a href="" title="运维">运维</a>
+                    <a href="" title="Web 安全">Web 安全</a>
+            </span>
+        </li>
+        <li>
+            <label class="bold">Mobile</label>
+            <span class="nodes">
+                    <a href="" title="iPhone">iPhone</a>
+                    <a href="" title="Android">Android</a>
+            </span>
+        </li>
+        <li>
+            <label class="bold">Languages</label>
+            <span class="nodes">
+                    <a href="" title="Python">Python</a>
+                    <a href="" title="JavaScript">JavaScript</a>
+                    <a href="" title="Go">Go</a>
+                    <a href="" title="Ruby">Python</a>
+                    <a href="" title="Erlang">Erlang</a>
+                    <a href="" title="Haskell">Haskell</a>
+            </span>
+        </li>
+        <li>
+            <label class="bold">Python China</label>
+            <span class="nodes">
+                    <a href="" title="公告">公告</a>
+                    <a href="" title="反馈">反馈</a>
+                    <a href="" title="社区开发">社区开发</a>
+            </span>
+        </li>
+        <li>
+            <label class="bold">活动</label>
+            <span class="nodes">
+                    <a href="" title="线下活动">线下活动</a>
+            </span>
+        </li>
+    </ul>
+</div>
+{% endblock %}	
+
+{% block side %}
+<div class="box">
+{% if user.is_authenticated %}
+<h2>我关注的节点</h2>
+<ul id="focus_nodes">
+{% for item in node_list %}
+<li><a href="/node/{{item.id}}/" title="{{item.name}}"><img src="/media/{{ item.pic }}" alt="{{item.name}}"></a></li>
+{% endfor %}
+</ul>
+{% else %}
+<h2>推荐节点</h2>
+<ul id="focus_nodes">
+{% for item in recommend_list %}
+<li><a href="/node/{{item.id}}/" title="{{item.name}}"><img src="/media/{{ item.pic }}" alt="{{item.name}}"></a></li>
+{% endfor %}
+</ul>
+{% endif %}
+<div class="clearfix"></div>
+</div>
+{% endblock %}

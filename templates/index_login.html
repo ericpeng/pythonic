@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>{% block title %}Pythonic-大道至简{% endblock %}</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="{% block description %}促进python及其pythonic哲学的传播{% endblock %}" />
+    <meta name="keywords" content="{% block keywords %}pythonic,python,python社区,敏捷{% endblock %}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/style.css"/>
+	<link rel="shortcut icon" href="/static/img/favicon.ico"  type="image/x-icon" />
+	{% block head %}{% endblock %}
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row-fluid">
+    	<div class="span6" style="background-image: url(static/img/tweed.png);height: 100%;">
+      		<div class="row-fluid">
+      			<div class="span5"></div>
+      			<div class="span7">
+      				<div style="margin: 100px 0 80px 0;min-height: 90px;background: url(static/img/index.png) no-repeat;"><a href="/" style="display:block;height:40px;width:100px;"></a></div>
+					<div style="color: #fff;">
+						<h1 style="color: #fff;"><p>注册π社区<p/><p>获得个性化的知识</p></h1>
+  						<p>π社区是一个基于兴趣的科学技术社区</p>
+					</div>
+      			</div>
+      		</div>
+    	</div>
+    	<div class="span6" style="background: #fff;height: 100%;">
+      		<div class="row-fluid">
+      			<div class="span7">
+				<div style="margin: 105px 0 0 30px;min-height: 90px;">
+					<form action="/accounts/login/" method="post" class="form-horizontal">{% csrf_token %}
+						{% for field in form %}
+						<div class="control-group">
+					    	<label class="control-label light">{{ field.label_tag }}</label>
+					    	<div class="controls">
+					    	{% if field.name != "password" %}
+	      						{{ field }}
+	      					{% else %}
+	      						{{ field }}<a href="/accounts/password_reset/">忘记密码?</a>
+	      					{% endif %}
+					      		<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+					    	</div>
+					  	</div>
+					  	{% endfor %}
+					  	<div class="control-group">
+					    	<label class="control-label"></label>
+					    	<div class="controls">
+								<label class="checkbox" style="float:left;">
+								  <input type="checkbox" name="auto">下次自动登录
+								</label>
+					    	</div>
+					  	</div>  	
+					    <div class="control-group">
+					    	<div class="controls">
+					      		<input type="submit" value="登录" class="btn">
+					    	</div>
+					  	</div>
+					</form>
+					<ul class="auth-list">
+						<li><a class="auth" href="/oauth/google"><img src="http://s.segmentfault.com/img/icon/auth-google-big.png" alt="Google">Google</a></li>
+						<li><a class="auth" href="/oauth/github"><img src="http://s.segmentfault.com/img/icon/auth-github-big.png" alt="GitHub">GitHub</a></li>
+						<li><a class="auth" href="/oauth/weibo"><img src="http://s.segmentfault.com/img/icon/auth-weibo-big.png" alt="新浪微博">新浪微博</a></li>
+						<li><a class="auth" href="/user/oauth/qq"><img src="http://s.segmentfault.com/img/icon/auth-qq-big.png" alt="腾讯微博">腾讯微博</a></li>
+        			</ul>
+        			<div class="index-bottom">
+        				<a href="">关于π社区</a>
+        				<a href="">用户协议</a>
+        				<a href="">联系我们</a>
+        				<a href="">帮助中心</a>
+        			</div>
+				</div>
+      			<div class="span5"></div>
+      		</div>
+    	</div>
+  	</div>
+</div>
+</body>
+</html>

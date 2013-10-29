@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% load markup %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block main %}
+<div class="topic-content">
+	<h1 style="margin-bottom: 18px;">{{topic.title}}</h1>
+	<a href="/people/{{topic.author.id}}/" class="t-face"><img src="/media/avatar/{{ topic.author.get_profile.avatar }}" alt="{{topic.author.get_profile.name}}"></a>
+  		<div class="t-main">
+  			<div class="t-meta">
+   			<span class="t-author"><a href="#">{{topic.author.get_profile.name}}</a></span>
+   			<span class="t-time">{{topic.created_on|time_since}}</span>
+  			</div>
+  			<div class="t-content"><p style="font-size: 14px;">{% autoescape off %}{{topic.content}}{% endautoescape %}</p></div>
+  		</div>
+</div>
+<h2>全部回复<p class="muted pull-right"><small>共收到{{topic.num_replies}}个回复</small></p></h2>
+<ul id="post-list" class="post-list">
+	{% for item in reply_list %}
+	<li class="post">
+		<div class="post-content">
+			<div class="user-face">
+				<a href="/people/{{item.author.id}}/" class="user">
+					<img alt="{{item.author.get_profile.name}}" src="/media/avatar/{{ item.author.get_profile.avatar }}">
+				</a>
+			</div>
+			<div class="post-body">
+				<header>   
+					<span class="publisher"><a href="/people/{{item.author.id}}/">{{item.author.get_profile.name}}</a></span>
+					<span class="time-ago" title="{{item.created_on}}">{{item.created_on|time_since}}</span>
+					<span class="order">#{{forloop.counter}}</span>
+				</header>
+				<div>
+					{% if item.has_parent %}<p><blockquote><small>{{item.parent.content}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/people/{{item.parent.author.id}}/">{{item.parent.author.get_profile.name}}</a></small></blockquote></p>{% endif %}
+					<p style="font-size: 14px;color:#000;">{% autoescape off %}{{item.content}}{% endautoescape %}</p>
+                </div>
+				<footer>    
+					<menu>
+        				{% if user.is_authenticated %}
+                    	<li class="post-reply"><a class="pull-right" href="#reply" onclick="reply('{{item.id}}','{{item.author.get_profile.name}}','{{item.author.id}}','{{item.content}}','{{forloop.counter}}')">回复</a></li>
+                    	{% endif %}
+       				</menu>
+				</footer>
+             </div>
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+{% if user.is_authenticated %}
+<div class="topic-new-reply">
+	<span id="reply" style="display: block; margin: 10px 0;">我的回复</span>
+	<div id="reply-fill"></div>
+	<form id="your-profile" action="/topic/{{topic.id}}/create/" method="post" class="form-horizontal"> {% csrf_token %}
+		{% for field in form %}
+		<div class="control-group">
+	    	<div class="controls" style="margin-left: 0;">
+				{{ field }}
+	    	</div>
+	    	<label>{{ field.errors }}</label>
+	  	</div>
+     	{% endfor %}
+	    <div class="control-group">
+	    	<div class="controls" style="margin-left: 0;float:right;">
+	      		<input type="submit" value="回复" class="btn btn-success">
+	    	</div>
+	  	</div>
+	  	<input type="hidden" value="" name="parent_id" id="parent_id">
+	</form>
+</div>
+{% else %}	
+<p class="required">您需要<a href="/accounts/login/">登录</a>来回复。没有账号，马上<a href="/accounts/register/">注册</a>一个。</p>
+{% endif %}
+{% endblock %}
+
+{% block side %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+function reply(id,name,author_id,content,count) {
+	$("#reply-fill").html("<div id='reply-close' class='alert alert-info'><button type='button' class='close' data-dismiss='alert'>×</button>"+content+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/people/"+author_id+"/'>"+name+"</a><span class='pull-right'>#"+count+"</span></div>");
+	$("#parent_id").val(id);
+	$('#reply-close').bind('closed', function () {
+		$("#parent_id").val('');
+	});
+}
+$('textarea.resizable:not(.processed)').TextAreaResizer();
+$(document).ready(function() {
+	//
+});
+</script>
+{% endblock %}

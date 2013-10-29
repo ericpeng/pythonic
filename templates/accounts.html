@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{{user.get_profile.name}}的账号
+{% endblock %}
+
+{% block main %}
+<h2>{{user.get_profile.name}}的账号</h2>
+<h4>设置我的账号信息</h4>
+<div class="box">
+	<form id="your-profile" action="/accounts/" method="post" class="form-horizontal"> {% csrf_token %}
+		{% for field in form %}
+		<div class="control-group">
+	    	<label class="control-label">{{ field.label_tag }}</label>
+	    	<div class="controls">
+	    		{% if field.name != "avatar" %}
+	      			{{ field }}<span class="error">{% for error in field.errors %}{{ error|escape }}{% endfor %}</span>
+	      		{% else %}
+	      			<img src="/media/avatar/{{ user.get_profile.avatar }}" />
+	      			{% if messages %}
+   						{% for message in messages %}
+   							<span class="muted">{{ message }}</span> <a href="/accounts/change_avatar/">更改</a>
+   						{% endfor %}
+   					{% else %}
+   						<a href="/accounts/change_avatar/">更改</a>
+					{% endif %}
+	      		{% endif %}
+	    	</div>
+	  	</div>
+     	{% endfor %}
+	    <div class="control-group">
+	    	<div class="controls">
+	      		<input type="submit" value="更新" class="btn btn-success">
+	    	</div>
+	  	</div>
+	</form>
+</div>
+{% endblock %}
